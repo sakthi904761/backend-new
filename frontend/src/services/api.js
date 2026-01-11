@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // Use environment variable or default to production backend
-const API_BASE = import.meta.env.VITE_API_URL || 'https://backend-1-uhbn.onrender.com';
+const API_BASE = import.meta.env.VITE_API_URL || 'https://backend-new-5yyw.onrender.com';
 
 console.log('🌐 API Configuration:');
 console.log('   Base URL:', API_BASE);
