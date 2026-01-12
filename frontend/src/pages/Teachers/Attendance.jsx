@@ -8,23 +8,32 @@ import { AttendanceContainer, Content, AttendanceContent, AttendanceHeader, Atte
 const CheckAttendanceSection = () => {
   const [students, setStudents] = useState([]);
   const [attendanceData, setAttendanceData] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     fetchStudents();
   }, []);
 
   const fetchStudents = async () => {
+    setLoading(true);
+    setError(null);
     try {
       const response = await api.get('/api/v1/students/getall');
-      setStudents(response.data.students || []);
-      initializeAttendanceData(response.data.students);
-    } catch (error) {
-      console.error('Error fetching students:', error);
+      const studentsArr = response.data?.students || [];
+      setStudents(studentsArr);
+      initializeAttendanceData(studentsArr);
+    } catch (err) {
+      console.error('Error fetching students:', err);
+      setError('Failed to load students');
+    } finally {
+      setLoading(false);
     }
   };
 
-  const initializeAttendanceData = (students) => {
-    const initialAttendanceData = students.map((student) => ({
+  const initializeAttendanceData = (students = []) => {
+    const initialAttendanceData = (students || []).map((student) => ({
       id: student._id || student.id,
       name: student.name,
       status: 'Present', // Default to 'Present'
@@ -43,13 +52,22 @@ const CheckAttendanceSection = () => {
   };
 
   const handleSubmit = async () => {
+    if (!attendanceData || attendanceData.length === 0) {
+      console.warn('No attendance data to submit');
+      return;
+    }
+
     try {
       // Send attendance data to the database
       const formattedData = attendanceData.map(({ id, status }) => ({ student: id, status }));
       const response = await api.post('/api/v1/attendance', { attendanceData: formattedData });
       console.log('Attendance data submitted:', response.data);
+      setSuccess(true);
+      // Hide success after 2 seconds
+      setTimeout(() => setSuccess(false), 2000);
     } catch (error) {
       console.error('Error submitting attendance data:', error);
+      setError('Failed to submit attendance');
     }
   };
 
@@ -83,59 +101,78 @@ const CheckAttendanceSection = () => {
             <button onClick={() => markAll('Absent with apology')} style={{ padding: '6px 10px' }}>Mark All Absent (Apology)</button>
             <button onClick={clearAll} style={{ padding: '6px 10px' }}>Clear All</button>
           </div>
-          <AttendanceList>
-            {students.map((student, index) => (
-              <React.Fragment key={student._id || student.id}>
-                <AttendanceItem>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%' }}>
-                    <div style={{ flex: 1 }} onClick={() => toggleEdit(student._id || student.id)}>
-                      <StudentName>{student.name}</StudentName>
-                    </div>
-                    {attendanceData[index]?.editing ? (
-                      <select
-                        value={attendanceData[index]?.status || ''}
-                        onChange={(e) => setStatusFor(attendanceData[index].id, e.target.value)}
-                      >
-                        <option value="">--select--</option>
-                        <option value="Present">Present</option>
-                        <option value="Absent">Absent</option>
-                        <option value="Absent with apology">Absent with apology</option>
-                      </select>
-                    ) : (
-                      <div style={{ display: 'flex', gap: 8 }}>
-                        <label>
-                          <input
-                            type="checkbox"
-                            checked={attendanceData[index]?.status === 'Present'}
-                            onChange={() => setStatusFor(attendanceData[index].id, 'Present')}
-                          />
-                          <span style={{ marginLeft: 6 }}>Present</span>
-                        </label>
-                        <label>
-                          <input
-                            type="checkbox"
-                            checked={attendanceData[index]?.status === 'Absent'}
-                            onChange={() => setStatusFor(attendanceData[index].id, 'Absent')}
-                          />
-                          <span style={{ marginLeft: 6 }}>Absent</span>
-                        </label>
-                        <label>
-                          <input
-                            type="checkbox"
-                            checked={attendanceData[index]?.status === 'Absent with apology'}
-                            onChange={() => setStatusFor(attendanceData[index].id, 'Absent with apology')}
-                          />
-                          <span style={{ marginLeft: 6 }}>Absent with apology</span>
-                        </label>
+          {loading ? (
+            <div>Loading students...</div>
+          ) : error ? (
+            <div style={{ color: 'red' }}>{error}</div>
+          ) : students.length === 0 ? (
+            <div>No students found</div>
+          ) : (
+            <>
+              <AttendanceList>
+                {students.map((student, index) => (
+                  <React.Fragment key={student._id || student.id}>
+                    <AttendanceItem>
+                      <div style={{ display: 'flex', alignItems: 'center', gap: 12, width: '100%' }}>
+                        <div style={{ flex: 1 }} onClick={() => toggleEdit(student._id || student.id)}>
+                          <StudentName>{student.name}</StudentName>
+                        </div>
+                        {attendanceData[index]?.editing ? (
+                          <select
+                            value={attendanceData[index]?.status || ''}
+                            onChange={(e) => setStatusFor(attendanceData[index]?.id || (student._id || student.id), e.target.value)}
+                          >
+                            <option value="">--select--</option>
+                            <option value="Present">Present</option>
+                            <option value="Absent">Absent</option>
+                            <option value="Absent with apology">Absent with apology</option>
+                          </select>
+                        ) : (
+                          <div style={{ display: 'flex', gap: 8 }}>
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={attendanceData[index]?.status === 'Present'}
+                                onChange={() => attendanceData[index] && setStatusFor(attendanceData[index].id, 'Present')}
+                                disabled={!attendanceData[index]}
+                              />
+                              <span style={{ marginLeft: 6 }}>Present</span>
+                            </label>
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={attendanceData[index]?.status === 'Absent'}
+                                onChange={() => attendanceData[index] && setStatusFor(attendanceData[index].id, 'Absent')}
+                                disabled={!attendanceData[index]}
+                              />
+                              <span style={{ marginLeft: 6 }}>Absent</span>
+                            </label>
+                            <label>
+                              <input
+                                type="checkbox"
+                                checked={attendanceData[index]?.status === 'Absent with apology'}
+                                onChange={() => attendanceData[index] && setStatusFor(attendanceData[index].id, 'Absent with apology')}
+                                disabled={!attendanceData[index]}
+                              />
+                              <span style={{ marginLeft: 6 }}>Absent with apology</span>
+                            </label>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                </AttendanceItem>
-                {index !== students.length - 1 && <Divider />}
-              </React.Fragment>
-            ))}
-          </AttendanceList>
-          <SubmitButton onClick={handleSubmit}>Submit</SubmitButton>
+                    </AttendanceItem>
+                    {index !== students.length - 1 && <Divider />}
+                  </React.Fragment>
+                ))}
+              </AttendanceList>
+              <SubmitButton onClick={handleSubmit} disabled={attendanceData.length === 0}>Submit</SubmitButton>
+            </>
+          )}
+
+          {success && (
+            <div style={{ position: 'fixed', bottom: 20, right: 20, background: '#28a745', color: '#fff', padding: '8px 12px', borderRadius: 6 }}>
+              Attendance submitted
+            </div>
+          )}
         </AttendanceContent>
       </Content>
     </AttendanceContainer>
