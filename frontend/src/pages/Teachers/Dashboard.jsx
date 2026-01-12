@@ -1,8 +1,8 @@
-// frontend/src/pages/TeacherDashboard.jsx
+// frontend/src/pages/Teachers/Dashboard.jsx
 import { Link } from "react-router-dom";
 import React, { useEffect, useState } from "react";
 import Sidebar from "./Sidebar";
-import axios from "axios";
+import { BsPeople, BsBook, BsClipboardCheck, BsCalendarEvent, BsEnvelopePaper } from 'react-icons/bs';
 import {
   TeacherDashboardContainer,
   Content,
@@ -12,106 +12,118 @@ import {
   Card,
   CardTitle,
   CardContent,
+  Header,
+  Greeting,
+  HeaderActions,
+  MetricGrid,
+  MetricCard,
+  MetricIcon,
+  MetricLabel,
+  MetricValue,
+  PrimaryButton,
+  SecondaryButton,
+  ClassesTable,
+  TableHeader,
+  ActivityList,
+  ActivityItem
 } from "../../styles/DashboardStyles";
 
 const TeacherDashboard = () => {
   const [stats, setStats] = useState({
-    students: 0,
-    classes: 0,
-    subjects: 0,
+    students: 120,
+    classes: 6,
+    assignments: 24,
   });
 
-  useEffect(() => {
-    // 👉 Later replace with real API
-    // Example: axios.get("/api/teacher/dashboard")
-    setStats({
-      students: 120,
-      classes: 6,
-      subjects: 3,
-    });
-  }, []);
+  const [recent, setRecent] = useState([
+    { id: 1, text: 'Attendance marked for Class 10-A', time: '2h ago' },
+    { id: 2, text: 'Marks uploaded for Mathematics', time: '1 day ago' },
+    { id: 3, text: 'New student added to Class 9-B', time: '3 days ago' }
+  ]);
 
-  const emailButtonStyle = {
-    display: "inline-block",
-    background: "linear-gradient(135deg, #667eea 0%, #764ba2 100%)",
-    color: "white",
-    padding: "12px 24px",
-    fontSize: "15px",
-    fontWeight: "600",
-    textDecoration: "none",
-    borderRadius: "10px",
-    transition: "all 0.3s ease",
-    boxShadow: "0 4px 15px rgba(102, 126, 234, 0.4)",
-    textTransform: "uppercase",
-    letterSpacing: "0.5px",
-    marginTop: "10px"
-  };
+  useEffect(() => {
+    // Placeholder for data fetching in future
+    // Example: axios.get('/api/teacher/dashboard').then(...)
+  }, []);
 
   return (
     <TeacherDashboardContainer>
       <Sidebar />
 
       <Content>
-        {/* ===== Overview Section ===== */}
+        <Header>
+          <Greeting>
+            <h1>Welcome back, <strong>Teacher</strong></h1>
+            <p>Here’s what’s happening in your classes today.</p>
+          </Greeting>
+
+          <HeaderActions>
+            <SecondaryButton as={Link} to="/teacher/events"><BsCalendarEvent /> Events</SecondaryButton>
+            <PrimaryButton as={Link} to="/Teachers/send-email"><BsEnvelopePaper /> Send Email</PrimaryButton>
+          </HeaderActions>
+        </Header>
+
         <Section>
-          <SectionTitle>Teacher Overview</SectionTitle>
-          
-          <Link 
-            to="/Teachers/send-email"
-            style={emailButtonStyle}
-            onMouseEnter={(e) => {
-              e.target.style.transform = "translateY(-2px)";
-              e.target.style.boxShadow = "0 6px 20px rgba(102, 126, 234, 0.6)";
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.transform = "translateY(0)";
-              e.target.style.boxShadow = "0 4px 15px rgba(102, 126, 234, 0.4)";
-            }}
-          >
-            📧 Send Email
-          </Link>
+          <SectionTitle>Key Metrics</SectionTitle>
 
-          <CardContainer>
-            <Card>
-              <CardTitle>Total Students</CardTitle>
-              <CardContent>{stats.students}</CardContent>
-            </Card>
+          <MetricGrid>
+            <MetricCard>
+              <MetricIcon><BsPeople /></MetricIcon>
+              <MetricLabel>Total Students</MetricLabel>
+              <MetricValue>{stats.students}</MetricValue>
+            </MetricCard>
 
-            <Card>
-              <CardTitle>Total Classes</CardTitle>
-              <CardContent>{stats.classes}</CardContent>
-            </Card>
+            <MetricCard>
+              <MetricIcon><BsBook /></MetricIcon>
+              <MetricLabel>Classes</MetricLabel>
+              <MetricValue>{stats.classes}</MetricValue>
+            </MetricCard>
 
-            <Card>
-              <CardTitle>Subjects Assigned</CardTitle>
-              <CardContent>{stats.subjects}</CardContent>
-            </Card>
-          </CardContainer>
+            <MetricCard>
+              <MetricIcon><BsClipboardCheck /></MetricIcon>
+              <MetricLabel>Pending Assignments</MetricLabel>
+              <MetricValue>{stats.assignments}</MetricValue>
+            </MetricCard>
+          </MetricGrid>
         </Section>
 
-        {/* ===== My Classes Section ===== */}
         <Section>
           <SectionTitle>My Classes</SectionTitle>
-          <p>View and manage your assigned classes.</p>
+          <p>Manage class lists, attendance, and assignments.</p>
+
+          <ClassesTable>
+            <thead>
+              <tr>
+                <TableHeader>Class</TableHeader>
+                <TableHeader>Students</TableHeader>
+                <TableHeader>Next Activity</TableHeader>
+                <TableHeader>Actions</TableHeader>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>10 - A</td>
+                <td>30</td>
+                <td>Unit Test - 10 Jan</td>
+                <td><PrimaryButton small>Details</PrimaryButton></td>
+              </tr>
+              <tr>
+                <td>9 - B</td>
+                <td>28</td>
+                <td>Parent Meeting - 15 Jan</td>
+                <td><PrimaryButton small>Details</PrimaryButton></td>
+              </tr>
+            </tbody>
+          </ClassesTable>
         </Section>
 
-        {/* ===== Recent Activity ===== */}
         <Section>
           <SectionTitle>Recent Activity</SectionTitle>
-          <ul>
-            <li>Attendance marked for Class 10-A</li>
-            <li>Marks uploaded for Mathematics</li>
-            <li>New student added to Class 9-B</li>
-          </ul>
-        </Section>
-
-        {/* ===== Upcoming Events ===== */}
-        <Section>
-          <SectionTitle>Upcoming Events</SectionTitle>
-          <ul>
-            <li>📅 Unit Test — 10 Jan</li>
-            <li>📅 Parent Meeting — 15 Jan</li>
-          </ul>
+          <ActivityList>
+            {recent.map(item => (
+              <ActivityItem key={item.id}>{item.text} <small>{item.time}</small></ActivityItem>
+            ))}
+          </ActivityList>
         </Section>
       </Content>
     </TeacherDashboardContainer>
