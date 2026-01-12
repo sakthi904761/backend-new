@@ -180,3 +180,131 @@ export const TeacherDashboardContainer = styled.div`
   display: flex;
   background-color: #f5f7fa;
 `;
+/* ===== Teacher-specific header & metric styles ===== */
+export const Header = styled.header`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 20px;
+`;
+
+export const Greeting = styled.div`
+  h1 {
+    margin: 0 0 6px 0;
+    font-size: 24px;
+    color: #1f2937;
+  }
+  p {
+    margin: 0;
+    color: #4b5563;
+    font-size: 14px;
+  }
+`;
+
+export const HeaderActions = styled.div`
+  display: flex;
+  gap: 10px;
+  align-items: center;
+`;
+
+export const PrimaryButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg,#667eea 0%,#764ba2 100%);
+  color: white;
+  padding: ${props => props.small ? '6px 10px' : '10px 16px'};
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  box-shadow: 0 6px 18px rgba(102,126,234,0.18);
+  transition: transform .12s ease, box-shadow .12s ease;
+  &:hover { transform: translateY(-2px); }
+`;
+
+export const SecondaryButton = styled(PrimaryButton)`
+  background: #fff;
+  color: #374151;
+  box-shadow: 0 2px 8px rgba(16,24,40,0.06);
+`;
+
+export const MetricGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(auto-fit,minmax(220px,1fr));
+  gap: 18px;
+  margin-top: 12px;
+`;
+
+export const MetricCard = styled.div`
+  background: linear-gradient(180deg,#ffffff 0%,#f8fafc 100%);
+  padding: 18px;
+  border-radius: 12px;
+  box-shadow: 0 8px 30px rgba(14,30,37,0.04);
+  border: 1px solid #e6eef8;
+  display:flex;
+  align-items:center;
+  gap: 14px;
+`;
+
+export const MetricIcon = styled.div`
+  background: linear-gradient(135deg,#eef2ff 0%,#e9d5ff 100%);
+  color: #4f46e5;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 20px;
+  display: inline-flex;
+  align-items:center;
+  justify-content:center;
+`;
+
+export const MetricLabel = styled.div`
+  font-size: 13px;
+  color: #6b7280;
+`;
+
+export const MetricValue = styled.div`
+  font-size: 22px;
+  font-weight: 700;
+  color: #111827;
+`;
+
+export const ClassesTable = styled.table`
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 12px;
+  background: #fff;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 6px 24px rgba(15,23,42,0.04);
+  td, th {
+    padding: 12px 16px;
+    text-align: left;
+  }
+  tbody tr:nth-child(odd){ background:#fbfafd }
+`;
+
+export const TableHeader = styled.th`
+  background: linear-gradient(180deg,#f8fafc,#eef2ff);
+  color:#374151;
+  font-weight:600;
+`;
+
+export const ActivityList = styled.div`
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+`;
+
+export const ActivityItem = styled.div`
+  background:#fff;
+  padding:10px 12px;
+  border-radius:8px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  color:#374151;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+  small { color:#6b7280; }
+`;
