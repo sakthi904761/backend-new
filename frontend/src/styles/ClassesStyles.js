@@ -20,40 +20,95 @@ export const ClassesContent = styled.div`
 `;
 
 export const ClassesHeader = styled.h2`
-  font-size: 24px;
-  margin-bottom: 20px;
+  font-size: 28px;
+  margin-bottom: 18px;
+  display:flex;
+  align-items:center;
+  gap:12px;
+`;
+
+export const Toolbar = styled.div`
+  display:flex;
+  gap:12px;
+  align-items:center;
+  margin-bottom: 18px;
+  flex-wrap:wrap;
+`;
+
+export const SearchInput = styled.input`
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+  min-width: 260px;
+  box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
 `;
 
 export const ClassList = styled.ul`
   list-style: none;
   padding: 0;
+  display:grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 12px;
 `;
 
 export const ClassItem = styled.li`
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  padding: 10px 20px;
-  margin-bottom: 10px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  background-color: #ffffff;
+  border-radius: 10px;
+  padding: 14px 16px;
+  box-shadow: 0 6px 18px rgba(6,8,18,0.06);
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  transition: transform 120ms ease, box-shadow 120ms ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 30px rgba(6,8,18,0.08);
+  }
+`;
+
+export const ClassName = styled.span`
+  font-size: 16px;
+  font-weight: 600;
+`;
+
+export const ClassActions = styled.div`
+  display:flex;
+  gap:8px;
+  align-items:center;
+`;
+
+export const ActionButton = styled.button.attrs({ type: 'button' })`
+  border: none;
+  background: transparent;
+  padding: 6px 8px;
+  border-radius: 6px;
+  cursor:pointer;
+  color: #374151;
+
+  &:hover { background: rgba(15,23,42,0.04); }
 `;
 
 export const AddClassForm = styled.form`
-  margin-bottom: 20px;
+  margin-bottom: 18px;
+  display:flex;
+  gap:8px;
+  align-items:center;
 `;
 
 export const AddClassInput = styled.input`
-  padding: 8px;
-  margin-right: 10px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
 `;
 
 export const AddClassButton = styled.button`
-  padding: 8px 16px;
-  background-color: #007bff;
+  padding: 8px 12px;
+  background: linear-gradient(90deg,#2563eb,#1e40af);
   color: #fff;
+  border-radius: 8px;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
 `;
 
