@@ -27,11 +27,27 @@ const AssignmentSection = () => {
     if (newAssignment.title.trim() !== '' && newAssignment.description.trim() !== '' && newAssignment.grade.trim() !== '' && newAssignment.deadline.trim() !== '') {
       try {
         const response = await api.post('/api/v1/assignments', newAssignment);
-        setAssignments([...assignments, response.data.assignment]);
+        // Some environments return the created object, others return only a message with 201 status.
+        const created = response.data && response.data.assignment ? response.data.assignment : null;
+        if (created) {
+          setAssignments(prev => [...prev, created]);
+        } else if (response.status === 201) {
+          // Backend accepted creation but didn't return the object; refresh list to sync UI
+          await fetchAssignments();
+        } else {
+          // unexpected response
+          console.warn('Unexpected add-assignment response', response);
+          window.alert('Assignment added, but unexpected response from server; refreshing list.');
+          await fetchAssignments();
+        }
         setNewAssignment({ title: '', description: '', grade: '', deadline: '' });
       } catch (error) {
         console.error('Error adding assignment:', error);
+        const serverMessage = error?.response?.data?.message || error.message || 'Add failed';
+        window.alert(`Error adding assignment: ${serverMessage}`);
       }
+    } else {
+      window.alert('Please fill all fields');
     }
   };
 
@@ -68,11 +84,13 @@ const AssignmentSection = () => {
             <AddAssignmentButton type="submit">Add Assignment</AddAssignmentButton>
           </AddAssignmentForm>
           <AssignmentList>
-            {assignments.map((assignment) => (
-              <AssignmentItem key={assignment.id}>
-                <strong>{assignment.title}: </strong>
-                {assignment.description}, {assignment.grade}, {assignment.deadline}
-              </AssignmentItem>
+            {assignments.map((assignment, index) => (
+              assignment ? (
+                <AssignmentItem key={assignment._id || assignment.id || index}>
+                  <strong>{assignment.title || ''}: </strong>
+                  {assignment.description || ''}, {assignment.grade || ''}, {assignment.deadline || ''}
+                </AssignmentItem>
+              ) : null
             ))}
           </AssignmentList>
         </AssignmentsContent>
