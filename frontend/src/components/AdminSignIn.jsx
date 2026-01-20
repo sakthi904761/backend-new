@@ -95,13 +95,6 @@ const AdminSignIn = () => {
           <DividerLine />
         </Divider>
 
-        <RegisterSection>
-          <RegisterText>Don't have an account?</RegisterText>
-          <RegisterButton onClick={() => navigate("/admin/register")}>
-            Register Now
-          </RegisterButton>
-        </RegisterSection>
-
         <Footer>
           <BackToHome onClick={() => navigate("/")}>
             ← Back to Home
@@ -349,37 +342,6 @@ const DividerText = styled.span`
   color: #a0aec0;
   font-size: 14px;
   font-weight: 600;
-`;
-
-const RegisterSection = styled.div`
-  text-align: center;
-  margin-bottom: 24px;
-`;
-
-const RegisterText = styled.p`
-  font-size: 14px;
-  color: #718096;
-  margin-bottom: 12px;
-`;
-
-const RegisterButton = styled.button`
-  background: none;
-  border: 2px solid #667eea;
-  color: #667eea;
-  padding: 12px 32px;
-  border-radius: 12px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-
-  &:hover {
-    background: linear-gradient(135deg, #667eea, #764ba2);
-    color: white;
-    border-color: transparent;
-    transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-  }
 `;
 
 const Footer = styled.div`
