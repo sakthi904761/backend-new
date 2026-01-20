@@ -1,10 +1,33 @@
 import axios from 'axios';
 
-// Use environment variable or default to production backend
-const API_BASE = import.meta.env.VITE_API_URL || 'https://backend-new-5yyw.onrender.com';
+// API Base URL Configuration
+// Priority: Environment variable > Local development > Production
+const getApiBaseUrl = () => {
+  // 1. Check for environment variable (set in .env.local or .env)
+  if (import.meta.env.VITE_API_URL) {
+    return import.meta.env.VITE_API_URL;
+  }
+  
+  // 2. Check if running in development mode (localhost)
+  if (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1') {
+    return 'http://localhost:4000';
+  }
+  
+  // 3. Check if running on local network
+  if (window.location.hostname.startsWith('10.')) {
+    return `http://${window.location.hostname}:4000`;
+  }
+  
+  // 4. Default to production backend
+  return 'https://backend-new-5yyw.onrender.com';
+};
+
+const API_BASE = getApiBaseUrl();
 
 console.log('🌐 API Configuration:');
 console.log('   Base URL:', API_BASE);
+console.log('   Environment:', import.meta.env.MODE);
+console.log('   Hostname:', window.location.hostname);
 
 const api = axios.create({
   baseURL: API_BASE,
@@ -12,7 +35,7 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  timeout: 30000, // 30 second timeout
+  timeout: 60000, // 60 second timeout for email operations
 });
 
 // Request interceptor for debugging
