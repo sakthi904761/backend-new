@@ -177,7 +177,6 @@ const navItems = [
   { label: 'Students', to: '/admin/students', icon: <BsPeople /> },
   { label: 'Teachers', to: '/admin/teachers', icon: <BsPerson /> },
   { label: 'Exams', to: '/admin/exams', icon: <BsBook /> },
-  { label: 'Performance', to: '/admin/performance', icon: <BsGraphDown /> },
   { label: 'Attendance', to: '/admin/attendance', icon: <BsCalendar /> },
   { label: 'Library', to: '/admin/library', icon: <BsBook /> },
   { label: 'Student Fees', to: '/admin/studentfees', icon: <BsCreditCard /> },
