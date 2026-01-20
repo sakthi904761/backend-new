@@ -40,7 +40,7 @@ import CheckAnnouncementSection from './pages/Teachers/Announcement';
 import AssignmentSection from './pages/Teachers/Assignments';
 import CheckAttendanceSection from './pages/Teachers/Attendance';
 import CheckExamSection from './pages/Teachers/Exams';
-import SendEmail from './pages/Teachers/SendEmail';
+import TeacherSendEmail from './pages/Teachers/SendEmail';
 
 const App = () => { 
   return (
@@ -96,8 +96,8 @@ const App = () => {
         <Route exact path="/teacher/attendance" element={<CheckAttendanceSection />} />
         <Route exact path="/teacher/communication" element={<CheckAnnouncementSection />} />
         <Route exact path="/teacher/events" element={<EventSection />} />
+        <Route exact path="/teacher/email" element={<TeacherSendEmail />} />
         <Route exact path="/teacher/settings" element={<TeacherProfileSection/>} />
-        <Route path="/Teachers/send-email" element={<SendEmail />} />
 
 
       </Routes>
