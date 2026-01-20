@@ -59,7 +59,7 @@ const TeacherDashboard = () => {
 
           <HeaderActions>
             <SecondaryButton as={Link} to="/teacher/events"><BsCalendarEvent /> Events</SecondaryButton>
-            <PrimaryButton as={Link} to="/Teachers/send-email"><BsEnvelopePaper /> Send Email</PrimaryButton>
+            <PrimaryButton as={Link} to="/teacher/email"><BsEnvelopePaper /> Send Email</PrimaryButton>
           </HeaderActions>
         </Header>
 
