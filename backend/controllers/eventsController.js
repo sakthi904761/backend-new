@@ -8,10 +8,11 @@ export const createEvents = async (req, res, next) => {
   if (!events ) {
     return next("Please Fill Form!", 400);
   }
-  await Events.create({ events });
+  const newEvent = await Events.create({ events });
   res.status(200).json({
     success: true,
     message: "Event is Created!",
+    event: newEvent,
   });    
   }  catch (err) {
     next(err);
@@ -28,5 +29,24 @@ export const getAllEvents = async (req, res, next) => {
 }  catch (err) {
   next(err);
 }
+};
+
+export const deleteEvents = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    if (!id) {
+      return res.status(400).json({ success: false, message: "Event ID is required" });
+    }
+    const deletedEvent = await Events.findByIdAndDelete(id);
+    if (!deletedEvent) {
+      return res.status(404).json({ success: false, message: "Event not found" });
+    }
+    res.status(200).json({
+      success: true,
+      message: "Event deleted successfully!",
+    });
+  } catch (err) {
+    next(err);
+  }
 };
  

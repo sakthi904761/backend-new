@@ -30,5 +30,34 @@ export const getAllAnnouncements = async (req, res, next) => {
   }
 };
 
+export const deleteAnnouncement = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    
+    if (!id) {
+      return res.status(400).json({
+        success: false,
+        message: "Announcement ID is required",
+      });
+    }
+
+    const announcement = await Announcement.findByIdAndDelete(id);
+    
+    if (!announcement) {
+      return res.status(404).json({
+        success: false,
+        message: "Announcement not found",
+      });
+    }
+
+    res.status(200).json({
+      success: true,
+      message: "Announcement deleted successfully!",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
 
 

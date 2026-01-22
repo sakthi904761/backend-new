@@ -1,3 +1,6 @@
+/* ✅ DISABLE SSL VERIFICATION FOR DEVELOPMENT - MUST BE FIRST */
+process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0';
+
 import express from "express";
 import { config } from "dotenv";
 import cors from "cors";
@@ -16,8 +19,8 @@ import usersRouter from "./router/usersRouter.js";
 import adminRegisterRouter from "./router/adminRegisterRouter.js";
 import teacherRoutes from "./router/teacher.routes.js";
 import studentFeesRouter from "./router/studentFeesRouter.js";
-import { errorHandler } from "./middlewares/errorHandler.js";
 import emailRoutes from "./router/email.routes.js";
+import { errorHandler } from "./middlewares/errorHandler.js";
 
 /* ✅ CREATE APP FIRST */
 const app = express();

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { NavLink, useNavigate } from 'react-router-dom'; 
-import { BsGraphUp, BsPeople, BsPerson, BsFileText, BsBook, BsGraphDown, BsCalendar, BsGear, BsChatDots, BsCalendarEvent, BsQuestionSquare, BsChevronLeft, BsChevronRight, BsBoxArrowRight } from 'react-icons/bs';
+import { BsGraphUp, BsPeople, BsPerson, BsFileText, BsBook, BsGraphDown, BsCalendar, BsGear, BsChatDots, BsCalendarEvent, BsQuestionSquare, BsChevronLeft, BsChevronRight, BsBoxArrowRight, BsEnvelope } from 'react-icons/bs';
 import LogoImg from '../../assets/bg1.png';
 
 const SidebarContainer = styled.aside`
@@ -186,13 +186,6 @@ const Sidebar = () => {
         </SidebarNavItem>
 
         <SidebarNavItem>
-          <ActiveLink to="/teacher/performance">
-            <NavIcon><BsGraphDown /></NavIcon>
-            {isOpen && <NavLabel>Performance</NavLabel>}
-          </ActiveLink>
-        </SidebarNavItem>
-
-        <SidebarNavItem>
           <ActiveLink to="/teacher/attendance">
             <NavIcon><BsCalendar /></NavIcon>
             {isOpen && <NavLabel>Attendance</NavLabel>}
@@ -210,6 +203,13 @@ const Sidebar = () => {
           <ActiveLink to="/teacher/events">
             <NavIcon><BsCalendarEvent /></NavIcon>
             {isOpen && <NavLabel>Events & Calendar</NavLabel>}
+          </ActiveLink>
+        </SidebarNavItem>
+
+        <SidebarNavItem>
+          <ActiveLink to="/teacher/email">
+            <NavIcon><BsEnvelope /></NavIcon>
+            {isOpen && <NavLabel>Send Email</NavLabel>}
           </ActiveLink>
         </SidebarNavItem>
 
