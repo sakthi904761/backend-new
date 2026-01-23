@@ -157,13 +157,6 @@ const Sidebar = () => {
         </SidebarNavItem>
 
         <SidebarNavItem>
-          <ActiveLink to="/teacher/classes">
-            <NavIcon><BsPeople /></NavIcon>
-            {isOpen && <NavLabel>Classes</NavLabel>}
-          </ActiveLink>
-        </SidebarNavItem>
-
-        <SidebarNavItem>
           <ActiveLink to="/teacher/students">
             <NavIcon><BsPeople /></NavIcon>
             {isOpen && <NavLabel>Students</NavLabel>}

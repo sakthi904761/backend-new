@@ -35,6 +35,7 @@ const AdminDashboard = () => {
   const [attendanceData, setAttendanceData] = useState([]);
   const [attendanceStats, setAttendanceStats] = useState({ present: 0, absent: 0, apology: 0 });
   const [exams, setExams] = useState([]);
+  const [students, setStudents] = useState([]);
 
   useEffect(() => {
     fetchEvents();
@@ -43,6 +44,7 @@ const AdminDashboard = () => {
     fetchStudentFees();
     fetchAttendance();
     fetchExams();
+    fetchStudents();
   }, []);
 
   const fetchEvents = async () => {
@@ -115,6 +117,15 @@ const AdminDashboard = () => {
     }
   };
 
+  const fetchStudents = async () => {
+    try {
+      const response = await api.get('/api/v1/students/getall');
+      setStudents(response.data.students || []);
+    } catch (error) {
+      console.error('Error fetching students:', error);
+    }
+  };
+
   return (
     <AdminDashboardContainer>
       <Sidebar />
@@ -143,7 +154,7 @@ const AdminDashboard = () => {
             <CardContainer>
               <Card>
                 <CardTitle>Total Students</CardTitle>
-                <CardContent>500</CardContent>
+                <CardContent>{students.length}</CardContent>
               </Card>
               <Card>
                 <CardTitle>Total Teachers</CardTitle>

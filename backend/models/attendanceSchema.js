@@ -11,6 +11,14 @@ const attendanceSchema = new mongoose.Schema({
     enum: ['Present', 'Absent', 'Absent with apology'],
     required: true
   },
+  date: {
+    type: Date,
+    default: Date.now
+  },
+  teacher: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'User'
+  },
   createdAt: {
     type: Date,
     default: Date.now
@@ -20,5 +28,9 @@ const attendanceSchema = new mongoose.Schema({
     default: Date.now
   }
 });
+
+// Index for faster queries
+attendanceSchema.index({ student: 1, date: 1 });
+attendanceSchema.index({ date: 1 });
 
 export default mongoose.model('Attendance', attendanceSchema);

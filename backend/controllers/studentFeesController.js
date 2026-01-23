@@ -1,4 +1,5 @@
 import { StudentFees } from "../models/studentFeesSchema.js";
+import { Student } from "../models/studentSchema.js";
 
 export const createStudentFees = async (req, res, next) => {
   console.log(req.body);
@@ -101,6 +102,56 @@ export const deleteStudentFees = async (req, res, next) => {
     res.status(200).json({
       success: true,
       message: "Student Fees Deleted!",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const searchStudentFeesByRollNumber = async (req, res, next) => {
+  try {
+    const { rollNumber } = req.params;
+
+    if (!rollNumber) {
+      return res.status(400).json({
+        success: false,
+        message: "Roll number is required",
+      });
+    }
+
+    // Find student fees by roll number
+    const fees = await StudentFees.findOne({ rollNumber: rollNumber.trim() });
+
+    if (!fees) {
+      return res.status(404).json({
+        success: false,
+        message: `No fees record found for roll number: ${rollNumber}`,
+      });
+    }
+
+    // Find student details including email and parent info
+    const student = await Student.findOne({ registrationNumber: rollNumber.trim() });
+
+    res.status(200).json({
+      success: true,
+      message: "Student fees record found",
+      fees: {
+        studentName: fees.studentName,
+        rollNumber: fees.rollNumber,
+        department: fees.department,
+        tuitionFees: fees.tuitionFees || 0,
+        hostelFees: fees.hostelFees || 0,
+        messFees: fees.messFees || 0,
+        labFees: fees.labFees || 0,
+        totalFees: fees.totalFees || 0,
+      },
+      student: {
+        name: student?.name || fees.studentName,
+        email: student?.email || "",
+        parentName: student?.parentName || "",
+        parentEmail: student?.parentEmail || "",
+        registrationNumber: student?.registrationNumber || rollNumber,
+      },
     });
   } catch (err) {
     next(err);

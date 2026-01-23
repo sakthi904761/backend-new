@@ -102,14 +102,6 @@ const Sidebar = () => {
           <StyledLink to="/student/assignments">Assignments</StyledLink>
         </SidebarNavItem>
         <SidebarNavItem>
-          <SidebarIcon><BsCalendar /></SidebarIcon>
-          <StyledLink to="/student/attendance">Attendance</StyledLink>
-        </SidebarNavItem>
-        <SidebarNavItem>
-        <SidebarIcon><BsBook /></SidebarIcon>
-          <StyledLink to="/student/library">Library </StyledLink>
-        </SidebarNavItem>
-        <SidebarNavItem>
           <SidebarIcon><BsChatDots /></SidebarIcon>
           <StyledLink to="/student/communication">Announcement</StyledLink>
         </SidebarNavItem>

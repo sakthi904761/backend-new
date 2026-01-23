@@ -173,12 +173,8 @@ const ToggleBtn = styled.button`
 
 const navItems = [
   { label: 'Dashboard', to: '/admin/dashboard', icon: <BsGraphUp /> },
-  { label: 'Classes', to: '/admin/classes', icon: <BsPeople /> },
   { label: 'Students', to: '/admin/students', icon: <BsPeople /> },
   { label: 'Teachers', to: '/admin/teachers', icon: <BsPerson /> },
-  { label: 'Exams', to: '/admin/exams', icon: <BsBook /> },
-  { label: 'Attendance', to: '/admin/attendance', icon: <BsCalendar /> },
-  { label: 'Library', to: '/admin/library', icon: <BsBook /> },
   { label: 'Student Fees', to: '/admin/studentfees', icon: <BsCreditCard /> },
   { label: 'Announcement', to: '/admin/communication', icon: <BsChatDots /> },
   { label: 'Events', to: '/admin/events', icon: <BsCalendarEvent /> },

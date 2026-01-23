@@ -36,7 +36,10 @@ This is a School Management System built using the MERN (MongoDB, Express.js, Re
 2. **Install dependencies:**
 
 cd 
-npm install
+npm install 
+npm install bcrypt (backend)
+npm install nodemalier(nackend
+)
 
 
 3. **Set up environment variables:**

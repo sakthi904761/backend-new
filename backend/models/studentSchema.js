@@ -11,10 +11,26 @@ const studentSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  grade: {
+  class: {
     type: String,
     required: true
   },
+  email: {
+    type: String,
+    default: ""
+  },
+  parentName: {
+    type: String,
+    default: ""
+  },
+  parentEmail: {
+    type: String,
+    default: ""
+  },
+  parentPhone: {
+    type: String,
+    default: ""
+  }
 });
 
 

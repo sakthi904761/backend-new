@@ -9,7 +9,6 @@ import AdminDashboard from './pages/Admin/Dashboard';
 import StudentDashboard from './pages/Students/Dashboard';
 import TeacherDashboard from './pages/Teachers/Dashboard';
 
-import Classes from './pages/Admin/Classes';
 import Exam from './pages/Admin/Exam';
 import Attendance from './pages/Admin/Attendance';
 import Performance from './pages/Admin/Performance';
@@ -30,7 +29,7 @@ import LibrarySection from './pages/Students/Library';
 import AnnouncementSection from './pages/Students/Announcement';
 import ProfileSection from './pages/Students/Profile';
 
-import ClassSection from './pages/Teachers/Classes';
+
 import StudentSection from './pages/Teachers/Students';
 import TeacherSection from './pages/Teachers/Teachers';
 import CheckPerformanceSection from './pages/Teachers/Performance';
@@ -63,7 +62,6 @@ const App = () => {
 
         {/* Admin section here */}
 
-        <Route exact path="/admin/classes" element={<Classes />} />
         <Route exact path="/admin/exams" element={<Exam />} />
         <Route exact path="/admin/attendance" element={<Attendance />} />
         <Route exact path="/admin/performance" element={<Performance />} />
@@ -87,7 +85,6 @@ const App = () => {
         <Route exact path="/student/settings" element={<ProfileSection />} />
 
         {/* Teachers sections here */}
-        <Route exact path="/teacher/classes" element={<ClassSection />} />
         <Route exact path="/teacher/students" element={<StudentSection />} />
         <Route exact path="/teacher/teachers" element={<TeacherSection />} />
         <Route exact path="/teacher/assignments" element={<AssignmentSection />} />
