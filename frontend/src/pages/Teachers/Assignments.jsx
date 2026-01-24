@@ -51,6 +51,38 @@ const AssignmentSection = () => {
     }
   };
 
+  const handleDeleteAssignment = async (assignmentId) => {
+    if (window.confirm('Are you sure you want to delete this assignment?')) {
+      try {
+        if (!assignmentId || assignmentId.trim() === '') {
+          window.alert('Invalid assignment ID');
+          return;
+        }
+        await api.delete(`/api/v1/assignments/${assignmentId}`);
+        setAssignments(prev => prev.filter(a => (a._id || a.id) !== assignmentId));
+        window.alert('Assignment deleted successfully');
+      } catch (error) {
+        console.error('Error deleting assignment:', error);
+        const serverMessage = error?.response?.data?.message || error.message || 'Delete failed';
+        window.alert(`Error deleting assignment: ${serverMessage}`);
+      }
+    }
+  };
+
+  const handleDeleteAllAssignments = async () => {
+    if (window.confirm('Are you sure you want to delete ALL assignments? This action cannot be undone!')) {
+      try {
+        await api.delete('/api/v1/assignments/delete-all');
+        setAssignments([]);
+        window.alert('All assignments deleted successfully!');
+      } catch (error) {
+        console.error('Error deleting all assignments:', error);
+        const serverMessage = error?.response?.data?.message || error.message || 'Delete all failed';
+        window.alert(`Error deleting all assignments: ${serverMessage}`);
+      }
+    }
+  };
+
   return (
     <AssignmentsContainer>
       <Sidebar />
@@ -81,14 +113,51 @@ const AssignmentSection = () => {
               value={newAssignment.deadline}
               onChange={(e) => setNewAssignment({ ...newAssignment, deadline: e.target.value })}
             />
-            <AddAssignmentButton type="submit">Add Assignment</AddAssignmentButton>
-          </AddAssignmentForm>
+            <AddAssignmentButton type="submit">Add Assignment</AddAssignmentButton>          {assignments.length > 0 && (
+            <button 
+              type="button"
+              onClick={handleDeleteAllAssignments}
+              style={{
+                background: '#c0392b',
+                color: 'white',
+                border: 'none',
+                padding: '10px 20px',
+                borderRadius: '5px',
+                cursor: 'pointer',
+                fontSize: '14px',
+                fontWeight: 'bold',
+                marginLeft: '10px'
+              }}
+            >
+              🗑️ Delete All Assignments
+            </button>
+          )}          </AddAssignmentForm>
           <AssignmentList>
             {assignments.map((assignment, index) => (
               assignment ? (
                 <AssignmentItem key={assignment._id || assignment.id || index}>
-                  <strong>{assignment.title || ''}: </strong>
-                  {assignment.description || ''}, {assignment.grade || ''}, {assignment.deadline || ''}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', width: '100%' }}>
+                    <span>
+                      <strong>{assignment.title || ''}: </strong>
+                      {assignment.description || ''}, {assignment.grade || ''}, {assignment.deadline || ''}
+                    </span>
+                    <button 
+                      onClick={() => handleDeleteAssignment(assignment._id || assignment.id)}
+                      style={{
+                        background: '#e74c3c',
+                        color: 'white',
+                        border: 'none',
+                        padding: '6px 12px',
+                        borderRadius: '5px',
+                        cursor: 'pointer',
+                        fontSize: '12px',
+                        fontWeight: 'bold',
+                        whiteSpace: 'nowrap'
+                      }}
+                    >
+                      🗑️ Delete
+                    </button>
+                  </div>
                 </AssignmentItem>
               ) : null
             ))}

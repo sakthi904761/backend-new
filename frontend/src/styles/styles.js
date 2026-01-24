@@ -119,7 +119,8 @@ export const LoginButton = styled.button`
   font-weight: 700;
   border-radius: 12px;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+  box-shadow: 0 6px 26px rgba(102, 126, 234, 0.32);
+  animation: pulseGlow 6s ease-in-out infinite;
   position: relative;
   overflow: hidden;
 
@@ -145,6 +146,21 @@ export const LoginButton = styled.button`
 
   &:active {
     transform: translateY(-1px);
+  }
+
+  @keyframes pulseGlow {
+    0% {
+      box-shadow: 0 6px 26px rgba(102, 126, 234, 0.28);
+      transform: translateY(0);
+    }
+    50% {
+      box-shadow: 0 16px 46px rgba(118, 75, 162, 0.38), 0 8px 30px rgba(102,126,234,0.18);
+      transform: translateY(-2px);
+    }
+    100% {
+      box-shadow: 0 6px 26px rgba(102, 126, 234, 0.28);
+      transform: translateY(0);
+    }
   }
 
   @media screen and (max-width: 768px) {

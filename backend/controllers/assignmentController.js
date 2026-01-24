@@ -31,3 +31,37 @@ export const getAllAssignments = async (req, res, next) => {
     next(err);
   }
 }; 
+
+export const deleteAssignment = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const assignment = await Assignment.findByIdAndDelete(id);
+    
+    if (!assignment) {
+      return res.status(404).json({
+        success: false,
+        message: "Assignment not found!",
+      });
+    }
+    
+    res.status(200).json({
+      success: true,
+      message: "Assignment deleted successfully!",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteAllAssignments = async (req, res, next) => {
+  try {
+    const result = await Assignment.deleteMany({});
+    res.status(200).json({
+      success: true,
+      message: `${result.deletedCount} assignment(s) deleted successfully!`,
+      deletedCount: result.deletedCount
+    });
+  } catch (err) {
+    next(err);
+  }
+};

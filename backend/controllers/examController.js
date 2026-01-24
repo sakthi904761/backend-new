@@ -30,3 +30,37 @@ export const getAllExams = async (req, res, next) => {
     next(err);
   }
 };
+
+export const deleteExam = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const exam = await Exam.findByIdAndDelete(id);
+    
+    if (!exam) {
+      return res.status(404).json({
+        success: false,
+        message: "Exam not found!",
+      });
+    }
+    
+    res.status(200).json({
+      success: true,
+      message: "Exam deleted successfully!",
+    });
+  } catch (err) {
+    next(err);
+  }
+};
+
+export const deleteAllExams = async (req, res, next) => {
+  try {
+    const result = await Exam.deleteMany({});
+    res.status(200).json({
+      success: true,
+      message: `${result.deletedCount} exam record(s) deleted successfully!`,
+      deletedCount: result.deletedCount
+    });
+  } catch (err) {
+    next(err);
+  }
+};
