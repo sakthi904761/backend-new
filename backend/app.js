@@ -174,6 +174,43 @@ app.get('/debug/headers', (req, res) => {
   });
 });
 
+// Debug: List all registered routes
+app.get('/debug/routes', (req, res) => {
+  const routes = [];
+  
+  app._router.stack.forEach((middleware) => {
+    if (middleware.route) {
+      // Direct route
+      routes.push({
+        path: middleware.route.path,
+        methods: Object.keys(middleware.route.methods)
+      });
+    } else if (middleware.name === 'router') {
+      // Router middleware
+      middleware.handle.stack.forEach((handler) => {
+        if (handler.route) {
+          const prefix = middleware.regexp.source
+            .replace(/\\*/, '')
+            .replace(/\?.*/, '')
+            .replace(/\\\//g, '/')
+            .replace(/\$/, '');
+          
+          routes.push({
+            path: prefix + handler.route.path,
+            methods: Object.keys(handler.route.methods)
+          });
+        }
+      });
+    }
+  });
+
+  res.json({
+    message: 'Registered Routes',
+    totalRoutes: routes.length,
+    routes: routes.sort((a, b) => a.path.localeCompare(b.path))
+  });
+});
+
 // API routes
 app.use("/api/teacher", teacherRoutes);
 app.use("/api/v1/students", studentRouter);
@@ -194,11 +231,15 @@ app.use((req, res) => {
   res.status(404).json({
     error: 'Not Found',
     message: `Route ${req.method} ${req.path} not found`,
+    hint: 'Check /debug/routes to see available endpoints',
     availableEndpoints: [
       'GET /',
       'GET /health',
       'GET /test-cors',
       'GET /debug/headers',
+      'GET /debug/routes',
+      'POST /api/v1/students/register',
+      'POST /api/v1/students/login',
       '/api/v1/*'
     ]
   });

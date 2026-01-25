@@ -26,7 +26,12 @@ const AssignmentSection = () => {
     e.preventDefault();
     if (newAssignment.title.trim() !== '' && newAssignment.description.trim() !== '' && newAssignment.grade.trim() !== '' && newAssignment.deadline.trim() !== '') {
       try {
-        const response = await api.post('/api/v1/assignments', newAssignment);
+        // Format the date to ISO format (YYYY-MM-DD) for the API
+        const assignmentData = {
+          ...newAssignment,
+          deadline: new Date(newAssignment.deadline).toISOString().split('T')[0]
+        };
+        const response = await api.post('/api/v1/assignments', assignmentData);
         // Some environments return the created object, others return only a message with 201 status.
         const created = response.data && response.data.assignment ? response.data.assignment : null;
         if (created) {
@@ -108,8 +113,7 @@ const AssignmentSection = () => {
               onChange={(e) => setNewAssignment({ ...newAssignment, grade: e.target.value })}
             />
             <AddAssignmentInput
-              type="text"
-              placeholder="Enter assignment deadline"
+              type="date"
               value={newAssignment.deadline}
               onChange={(e) => setNewAssignment({ ...newAssignment, deadline: e.target.value })}
             />

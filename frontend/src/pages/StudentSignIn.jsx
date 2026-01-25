@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { api } from '../services/api';
 import styled from 'styled-components';
 
@@ -44,7 +44,6 @@ const Form = styled.form`
 const FormGroup = styled.div`
   display: flex;
   flex-direction: column;
-  position: relative;
 `;
 
 const Label = styled.label`
@@ -54,19 +53,12 @@ const Label = styled.label`
   font-size: 14px;
 `;
 
-const PasswordInputWrapper = styled.div`
-  position: relative;
-  display: flex;
-  align-items: center;
-`;
-
 const Input = styled.input`
   padding: 12px;
   border: 1px solid #ddd;
   border-radius: 6px;
   font-size: 14px;
   transition: border-color 0.3s;
-  width: 100%;
 
   &:focus {
     outline: none;
@@ -77,30 +69,6 @@ const Input = styled.input`
   &:disabled {
     background-color: #f5f5f5;
     cursor: not-allowed;
-  }
-`;
-
-const PasswordToggleButton = styled.button`
-  position: absolute;
-  right: 12px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #667eea;
-  font-size: 18px;
-  padding: 4px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: color 0.2s;
-
-  &:hover {
-    color: #764ba2;
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.5;
   }
 `;
 
@@ -189,8 +157,6 @@ const StudentSignIn = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [messageType, setMessageType] = useState('error');
-  const [showPassword, setShowPassword] = useState(false);
-  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -371,51 +337,31 @@ const StudentSignIn = () => {
 
           <FormGroup>
             <Label htmlFor="password">🔐 Password</Label>
-            <PasswordInputWrapper>
-              <Input
-                id="password"
-                name="password"
-                type={showPassword ? "text" : "password"}
-                placeholder={isLogin ? "Enter your password" : "Create a password (min. 6 characters)"}
-                value={formData.password}
-                onChange={handleChange}
-                disabled={loading}
-                required
-              />
-              <PasswordToggleButton
-                type="button"
-                onClick={() => setShowPassword(!showPassword)}
-                disabled={loading}
-                title={showPassword ? "Hide password" : "Show password"}
-              >
-                {showPassword ? '👁️' : '👁️‍🗨️'}
-              </PasswordToggleButton>
-            </PasswordInputWrapper>
+            <Input
+              id="password"
+              name="password"
+              type="password"
+              placeholder={isLogin ? "Enter your password" : "Create a password (min. 6 characters)"}
+              value={formData.password}
+              onChange={handleChange}
+              disabled={loading}
+              required
+            />
           </FormGroup>
 
           {!isLogin && (
             <FormGroup>
               <Label htmlFor="confirmPassword">🔐 Confirm Password</Label>
-              <PasswordInputWrapper>
-                <Input
-                  id="confirmPassword"
-                  name="confirmPassword"
-                  type={showConfirmPassword ? "text" : "password"}
-                  placeholder="Confirm your password"
-                  value={formData.confirmPassword}
-                  onChange={handleChange}
-                  disabled={loading}
-                  required
-                />
-                <PasswordToggleButton
-                  type="button"
-                  onClick={() => setShowConfirmPassword(!showConfirmPassword)}
-                  disabled={loading}
-                  title={showConfirmPassword ? "Hide password" : "Show password"}
-                >
-                  {showConfirmPassword ? '👁️' : '👁️‍🗨️'}
-                </PasswordToggleButton>
-              </PasswordInputWrapper>
+              <Input
+                id="confirmPassword"
+                name="confirmPassword"
+                type="password"
+                placeholder="Confirm your password"
+                value={formData.confirmPassword}
+                onChange={handleChange}
+                disabled={loading}
+                required
+              />
             </FormGroup>
           )}
 

@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js"
+    "dev": "nodemon index.js",
+    "test": "node test-backend.js",
+    "test-register": "node test-registration.js"
   },
   "author": "",
   "license": "ISC",
