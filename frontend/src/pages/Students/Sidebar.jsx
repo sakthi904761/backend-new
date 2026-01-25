@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Link, useLocation } from 'react-router-dom'; 
-import { MdDashboard, MdAssignment, MdNotifications, MdPerson, MdLogout, MdSchool, MdEmojiEvents, MdLibraryBooks, MdAutoGraph } from 'react-icons/md';
+import { MdDashboard, MdAssignment, MdNotifications, MdPerson, MdLogout, MdSchool, MdEmojiEvents, MdLibraryBooks, MdAutoGraph, MdFilePresent } from 'react-icons/md';
 import { IoMenu, IoClose } from 'react-icons/io5';
 
 const SidebarContainer = styled.div`
@@ -216,6 +216,7 @@ const Sidebar = () => {
     { path: '/student/exams', icon: <MdSchool />, label: 'Exams' },
     { path: '/student/attendance', icon: <MdEmojiEvents />, label: 'Attendance' },
     { path: '/student/performance', icon: <MdAutoGraph />, label: 'Performance' },
+    { path: '/student/resume', icon: <MdFilePresent />, label: 'Resume' },
     { path: '/student/library', icon: <MdLibraryBooks />, label: 'Library' },
     { path: '/student/communication', icon: <MdNotifications />, label: 'Announcements' },
     { path: '/student/settings', icon: <MdPerson />, label: 'Profile' },

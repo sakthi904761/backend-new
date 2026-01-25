@@ -29,6 +29,7 @@ import AttendanceSection from './pages/Students/Attendance';
 import LibrarySection from './pages/Students/Library';
 import AnnouncementSection from './pages/Students/Announcement';
 import ProfileSection from './pages/Students/Profile';
+import Resume from './pages/Students/Resume';
 
 
 import StudentSection from './pages/Teachers/Students';
@@ -82,6 +83,7 @@ const App = () => {
         <Route exact path="/student/exams" element={<ExamSection />} />
         <Route exact path="/student/performance" element={<PerformanceSection />} />
         <Route exact path="/student/attendance" element={<AttendanceSection />} />
+        <Route exact path="/student/resume" element={<Resume />} />
         <Route exact path="/student/library" element={<LibrarySection />} />
         <Route exact path="/student/communication" element={<AnnouncementSection/>} />
         <Route exact path="/student/settings" element={<ProfileSection />} />
