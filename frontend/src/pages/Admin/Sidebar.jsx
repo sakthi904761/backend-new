@@ -174,6 +174,7 @@ const ToggleBtn = styled.button`
 const navItems = [
   { label: 'Dashboard', to: '/admin/dashboard', icon: <BsGraphUp /> },
   { label: 'Students', to: '/admin/students', icon: <BsPeople /> },
+  { label: 'Portal Registrations', to: '/admin/portal-registrations', icon: <BsFileText /> },
   { label: 'Teachers', to: '/admin/teachers', icon: <BsPerson /> },
   { label: 'Student Fees', to: '/admin/studentfees', icon: <BsCreditCard /> },
   { label: 'Announcement', to: '/admin/communication', icon: <BsChatDots /> },

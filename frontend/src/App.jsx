@@ -14,6 +14,7 @@ import Attendance from './pages/Admin/Attendance';
 import Performance from './pages/Admin/Performance';
 import Teachers from './pages/Admin/Teachers';
 import Students from './pages/Admin/Students';
+import StudentRegistrations from './pages/Admin/StudentRegistrations';
 import Assignments from './pages/Admin/Assignments';
 import Library from './pages/Admin/Library';
 import StudentFees from './pages/Admin/StudentFees';
@@ -67,6 +68,7 @@ const App = () => {
         <Route exact path="/admin/performance" element={<Performance />} />
         <Route exact path="/admin/teachers" element={<Teachers />} />
         <Route exact path="/admin/students" element={<Students />} />
+        <Route exact path="/admin/portal-registrations" element={<StudentRegistrations />} />
         <Route exact path="/admin/assignments" element={<Assignments />} />
         <Route exact path="/admin/library" element={<Library />} />
         <Route exact path="/admin/studentfees" element={<StudentFees />} />
