@@ -728,6 +728,235 @@ export const sendImmediateAttendanceReport = async (req, res) => {
   }
 };
 
+// Send Individual Student Attendance Report (Personalized per student)
+export const sendStudentAttendanceReport = async (req, res) => {
+  try {
+    const { rollNumber, startDate, endDate, studentEmail, parentEmail } = req.body;
+
+    if (!rollNumber) {
+      return res.status(400).json({
+        success: false,
+        message: 'Please provide a roll number',
+      });
+    }
+
+    console.log('📧 Starting personalized attendance report sending...');
+    console.log('   Roll Number:', rollNumber);
+    console.log('   Period:', startDate, 'to', endDate);
+
+    // Get student details
+    const student = await Student.findOne({ registrationNumber: rollNumber.trim() });
+
+    if (!student) {
+      return res.status(404).json({
+        success: false,
+        message: `Student not found for roll number: ${rollNumber}`,
+      });
+    }
+
+    console.log('   Student:', student.name);
+
+    // Build date range
+    const start = startDate ? new Date(startDate) : new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    const end = endDate ? new Date(endDate) : new Date();
+    end.setHours(23, 59, 59, 999);
+
+    // Get attendance records for this specific student
+    const attendanceRecords = await Attendance.find({
+      student: student._id,
+      createdAt: { $gte: start, $lte: end }
+    }).populate('student');
+
+    console.log('   Found', attendanceRecords.length, 'attendance records');
+
+    // Calculate attendance stats for this student
+    let stats = {
+      name: student.name,
+      regNum: student.registrationNumber,
+      parentEmail: student.parentEmail,
+      studentEmail: student.email,
+      parentName: student.parentName,
+      class: student.class,
+      present: 0,
+      absent: 0,
+      apology: 0,
+      total: 0
+    };
+
+    attendanceRecords.forEach(record => {
+      if (record.status === 'Present') stats.present++;
+      else if (record.status === 'Absent') stats.absent++;
+      else if (record.status === 'Absent with apology') stats.apology++;
+      stats.total++;
+    });
+
+    const results = {
+      successful: 0,
+      failed: 0,
+      failedEmails: [],
+    };
+
+    const transporter = getTransporter();
+    const attendancePercentage = stats.total > 0 ? Math.round((stats.present / stats.total) * 100) : 0;
+    const statusColor = attendancePercentage >= 80 ? '#10b981' : attendancePercentage >= 60 ? '#f59e0b' : '#ef4444';
+    const statusText = attendancePercentage >= 80 ? 'Good' : attendancePercentage >= 60 ? 'Fair' : 'Poor';
+
+    const emailTemplate = `
+      <div style="font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; max-width: 600px; margin: 0 auto;">
+        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 8px 8px 0 0; color: white;">
+          <h2 style="margin: 0; font-size: 24px;">📊 Attendance Report</h2>
+          <p style="margin: 5px 0 0 0; font-size: 14px;">School Management System</p>
+        </div>
+        <div style="background: #f9fafb; padding: 30px; border-radius: 0 0 8px 8px;">
+          <p style="color: #374151; margin-top: 0; font-size: 16px;">Dear {RECIPIENT_NAME},</p>
+          
+          <p style="color: #6b7280; font-size: 14px; margin-bottom: 20px;">
+            {GREETING_TEXT}
+          </p>
+
+          <div style="background: white; padding: 20px; border-radius: 8px; border: 2px solid #e5e7eb; margin: 20px 0;">
+            <h3 style="margin: 0 0 15px 0; color: #1f3a57; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">Student Information</h3>
+            <p style="margin: 8px 0;"><strong>Name:</strong> ${student.name}</p>
+            <p style="margin: 8px 0;"><strong>Registration #:</strong> ${student.registrationNumber}</p>
+            <p style="margin: 8px 0;"><strong>Class:</strong> ${student.class}</p>
+            <p style="margin: 8px 0;"><strong>Report Period:</strong> ${start.toDateString()} to ${end.toDateString()}</p>
+          </div>
+
+          <div style="background: white; padding: 20px; border-radius: 8px; border: 2px solid #e5e7eb; margin: 20px 0;">
+            <h3 style="margin: 0 0 15px 0; color: #1f3a57; border-bottom: 2px solid #e5e7eb; padding-bottom: 10px;">Attendance Summary</h3>
+            
+            <div style="display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; margin-bottom: 20px;">
+              <div style="background: #ecfdf5; padding: 15px; border-radius: 8px; text-align: center;">
+                <p style="margin: 0; font-size: 24px; font-weight: bold; color: #10b981;">${stats.present}</p>
+                <p style="margin: 5px 0 0 0; font-size: 12px; color: #047857;">Days Present</p>
+              </div>
+              <div style="background: #fef3c7; padding: 15px; border-radius: 8px; text-align: center;">
+                <p style="margin: 0; font-size: 24px; font-weight: bold; color: #f59e0b;">${stats.absent}</p>
+                <p style="margin: 5px 0 0 0; font-size: 12px; color: #b45309;">Days Absent</p>
+              </div>
+              <div style="background: #fecaca; padding: 15px; border-radius: 8px; text-align: center;">
+                <p style="margin: 0; font-size: 24px; font-weight: bold; color: #ef4444;">${stats.apology}</p>
+                <p style="margin: 5px 0 0 0; font-size: 12px; color: #991b1b;">Absent w/ Apology</p>
+              </div>
+              <div style="background: #dbeafe; padding: 15px; border-radius: 8px; text-align: center;">
+                <p style="margin: 0; font-size: 24px; font-weight: bold; color: #3b82f6;">${stats.total}</p>
+                <p style="margin: 5px 0 0 0; font-size: 12px; color: #1e40af;">Total Days</p>
+              </div>
+            </div>
+
+            <div style="background: ${statusColor}20; border-left: 4px solid ${statusColor}; padding: 15px; border-radius: 8px; text-align: center;">
+              <p style="margin: 0; font-size: 18px; font-weight: bold; color: ${statusColor};">
+                ${attendancePercentage}% Attendance (${statusText})
+              </p>
+            </div>
+          </div>
+
+          <div style="background: #f0f9ff; padding: 15px; border-radius: 8px; border-left: 4px solid #3b82f6; margin: 20px 0;">
+            <p style="margin: 0; color: #1e40af; font-size: 13px;">
+              <strong>Note:</strong> This is an automated report. For any concerns or clarifications regarding attendance, please contact the school administration.
+            </p>
+          </div>
+
+          <p style="color: #6b7280; font-size: 14px; margin: 20px 0 0 0;">
+            Best regards,<br>
+            <strong>School Management System</strong>
+          </p>
+        </div>
+        <div style="background: #1f3a57; padding: 20px; text-align: center; border-radius: 0 0 8px 8px;">
+          <p style="color: #9ca3af; font-size: 12px; margin: 0;">© 2026 School Management System. All rights reserved.</p>
+        </div>
+      </div>
+    `;
+
+    // Email to Student
+    if (student.email) {
+      try {
+        const studentHtml = emailTemplate
+          .replace('{RECIPIENT_NAME}', student.name)
+          .replace('{GREETING_TEXT}', 'Please find your attendance report below for your reference.');
+        
+        await transporter.sendMail({
+          from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+          to: student.email,
+          subject: `📊 Your Attendance Report - ${student.name}`,
+          html: studentHtml,
+        });
+        results.successful++;
+        console.log('   ✅ Email sent to student:', student.name);
+      } catch (error) {
+        results.failed++;
+        results.failedEmails.push({ 
+          recipient: `${student.name} (Student)`, 
+          email: student.email, 
+          error: error.message 
+        });
+        console.log('   ❌ Failed to send to student:', student.name);
+      }
+    }
+
+    // Email to Parent
+    if (student.parentEmail) {
+      try {
+        const parentHtml = emailTemplate
+          .replace('{RECIPIENT_NAME}', student.parentName || 'Parent/Guardian')
+          .replace('{GREETING_TEXT}', `Please find the attendance report for your child ${student.name} below.`);
+        
+        await transporter.sendMail({
+          from: process.env.EMAIL_FROM || process.env.EMAIL_USER,
+          to: student.parentEmail,
+          subject: `📊 Attendance Report for ${student.name}`,
+          html: parentHtml,
+        });
+        results.successful++;
+        console.log('   ✅ Email sent to parent of:', student.name);
+      } catch (error) {
+        results.failed++;
+        results.failedEmails.push({ 
+          recipient: `${student.parentName || 'Parent of ' + student.name}`, 
+          email: student.parentEmail, 
+          error: error.message 
+        });
+        console.log('   ❌ Failed to send to parent of:', student.name);
+      }
+    }
+
+    if (results.successful === 0) {
+      return res.status(400).json({
+        success: false,
+        message: 'No email addresses found for student or parent',
+        results,
+      });
+    }
+
+    console.log('✅ Student attendance report sending completed');
+    console.log('   Successful:', results.successful);
+    console.log('   Failed:', results.failed);
+
+    return res.status(200).json({
+      success: true,
+      message: `Attendance report sent to ${results.successful} recipient(s)!`,
+      results,
+      stats: {
+        studentName: student.name,
+        rollNumber: rollNumber,
+        attendancePercentage: attendancePercentage,
+        present: stats.present,
+        absent: stats.absent,
+        apology: stats.apology,
+        total: stats.total,
+        period: { startDate: start.toDateString(), endDate: end.toDateString() }
+      }
+    });
+
+  } catch (error) {
+    console.error('❌ Student attendance report failed:', error.message);
+    return res.status(500).json({
+      success: false,
+      message: 'Failed to send attendance report: ' + error.message,
+    });
+  }
+};
+
 export const sendFeesReport = async (req, res) => {
   try {
     const { rollNumber, studentEmail, parentEmail } = req.body;
