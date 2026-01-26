@@ -1,6 +1,5 @@
 # MERN Stack School Management System
-#Asmin Email:sakthi@gmail.com
-pass:Sakthi@05
+
 
 This is a School Management System built using the MERN (MongoDB, Express.js, React, Node.js) stack. The frontend is developed with React and Vite, with styling done using styled-components.
 
@@ -49,11 +48,11 @@ npm install nodemalier(nackend
 
   ```
 PORT=4000
-MONGO_URL=mongodb+srv://sakthi123:sakthi123@cluster0.uxaugaa.mongodb.net/?appName=Cluster0
+MONGO_URL=
 FRONTEND_URL=http://localhost:5173
 
-EMAIL_USER=mrrugged091@gmail.com
-EMAIL_PASS=flmvaskjybprfcyo
+EMAIL_USER=
+EMAIL_PASS=
 NODE_ENV=development
 
 4. **Run the development servers:**
